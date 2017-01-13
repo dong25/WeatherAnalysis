@@ -17,7 +17,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ###In conclusion, tornados cause the most public health damage by far in terms of both fatality and injuries; while flooding and draught cause most econimic damage to properties and crops respectively.
 
 
-
+-------------------------------------------------------------------------------------------
+###Data Processing Section
+####
 ####
 ####Loading required r packages
 
@@ -61,18 +63,7 @@ my_plot02$EVTYPE<-factor(my_plot02$EVTYPE,levels=as.character(my_plot02$EVTYPE))
 #plot(sum_by_event ~ EVTYPE, data=my_plot02,type="b",xlab="Event Type",ylab="Total Injuries",title="Total Injury by Event Type")
 #qplot(EVTYPE,sum_by_event,data=my_plot02)
 ```
-####Plotting Fatality and Injury Data
-```{r plot_fatality_injury}
-par(mfrow=c(2,1),cex.lab=0.8,cex.axis=0.3)
-plot(sum_by_event ~ EVTYPE, data=my_plot01,type="b",xlab="Event Type",ylab="Total Fatality",main="Total Fatality by Event Type (top 10)")
-plot(sum_by_event ~ EVTYPE, data=my_plot02,type="b",xlab="Event Type",ylab="Total Injuries",main="Total Injury by Event Type (top 10)")
 
-```
-
-
-###
-
-###Conclusion: Tornado is by far the most dangerous natural event causing more fatalities and injuries than any other natural disasters/events.
 
 ####
 ####
@@ -160,11 +151,26 @@ my_plot04$EVTYPE<-as.factor(my_plot04$EVTYPE)
 my_plot04$EVTYPE<-factor(my_plot04$EVTYPE,
                          levels=as.character(my_plot04$EVTYPE))
 ```
+------------------------------------------------------------------------------------------
+### Result Plotting and Presentation Section
+####Plotting Fatality and Injury Data
+```{r plot_fatality_injury}
+par(mfrow=c(2,1),cex.lab=0.8,cex.axis=0.3)
+plot(sum_by_event ~ EVTYPE, data=my_plot01,type="b",xlab="Event Type",ylab="Total Fatality",main="Total Fatality by Event Type (top 10)")
+plot(sum_by_event ~ EVTYPE, data=my_plot02,type="b",xlab="Event Type",ylab="Total Injuries",main="Total Injury by Event Type (top 10)")
+
+```
+
+
+###
+
+###Conclusion: Tornado is by far the most dangerous natural event causing more fatalities and injuries than any other natural disasters/events.
+
 #### Plot Damage Data
 ```{r plot_damage_data}
 par(mfrow=c(2,1),cex.lab=0.8,cex.axis=0.3)
 plot(sum_by_event ~ EVTYPE, data=my_plot03,type="b",xlab="Event Type",ylab="Total Property Damage ($)",
-     main="Total Property by Event Type (top 10)")
+     main="Total Property Damage by Event Type (top 10)")
 plot(sum_by_event ~ EVTYPE, data=my_plot04,type="b",xlab="Event Type",ylab="Total Crop Damage ($)",
      main="Total Crop Damage by Event Type (top 10)")
 ```
