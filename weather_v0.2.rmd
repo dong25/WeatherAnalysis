@@ -1,0 +1,177 @@
+---
+title: "Impact Assessment of US Severe Weather Events on Public Health and Economy"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#knitr::opts_chunk$set(cache=TRUE)
+```
+
+
+### This report analyses US weather data for the effects of severe weather events on public health and econmic damages.  The weather data is from the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database that tracks characteristics of major storms and weather events in the US.
+
+###The data is loaded with manipulation.  For public health assessment, both fatalities and injuries are totalled based on weather event types with top 10 most damaging events plotted. For economic damage assessment, both property damage and crop damage are totalled based on weather even types with top 10 most damaging events plotted.
+
+###In conclusion, tornados cause the most public health damage by far in terms of both fatality and injuries; while flooding and draught cause most econimic damage to properties and crops respectively.
+
+
+
+####
+####Loading required r packages
+
+```{r loadpackeges}
+library(dplyr)
+library(ggplot2)
+```
+
+####Reading NOAA weather data
+```{r readdata, cache=TRUE}
+#read the raw data file and cache the result as it is time consuming.
+myweatherdata<-read.csv("repdata%2Fdata%2FStormData.csv.bz2")
+
+```
+
+#### Analyse total fatality by event type
+```{r analyse_plot_death}
+death_by_eventtype<-group_by(myweatherdata,EVTYPE)
+my_deathsum<-summarise(death_by_eventtype,sum_by_event=sum(FATALITIES))
+my_death02<-arrange(my_deathsum,desc(sum_by_event))
+my_plot01<-head(my_death02,10)
+my_plot01<-as.data.frame(my_plot01)
+my_plot01$EVTYPE<-as.character(my_plot01$EVTYPE)
+my_plot01$EVTYPE<-as.factor(my_plot01$EVTYPE)
+my_plot01$EVTYPE<-factor(my_plot01$EVTYPE,levels=as.character(my_plot01$EVTYPE)) #resorting the EVTYPE based on descending total fatality value;
+#plot(sum_by_event ~ EVTYPE, data=my_plot01,type="b",xlab="Event Type",ylab="Total Fatality",main="Total Fatality by Event Type")
+#qplot(EVTYPE,sum_by_event,data=my_plot)
+```
+
+#### Analyse total injuries by event type
+
+```{r analyse_plot_injury}
+injury_by_eventtype<-group_by(myweatherdata,EVTYPE)
+my_injurysum<-summarise(injury_by_eventtype,sum_by_event=sum(INJURIES))
+my_injury02<-arrange(my_injurysum,desc(sum_by_event))
+my_plot02<-head(my_injury02,10)
+my_plot02<-as.data.frame(my_plot02)
+my_plot02$EVTYPE<-as.character(my_plot02$EVTYPE)
+my_plot02$EVTYPE<-as.factor(my_plot02$EVTYPE)
+my_plot02$EVTYPE<-factor(my_plot02$EVTYPE,levels=as.character(my_plot02$EVTYPE)) #resorting the EVTYPE based on descending total fatality value;
+#plot(sum_by_event ~ EVTYPE, data=my_plot02,type="b",xlab="Event Type",ylab="Total Injuries",title="Total Injury by Event Type")
+#qplot(EVTYPE,sum_by_event,data=my_plot02)
+```
+####Plotting Fatality and Injury Data
+```{r plot_fatality_injury}
+par(mfrow=c(2,1),cex.lab=0.8,cex.axis=0.3)
+plot(sum_by_event ~ EVTYPE, data=my_plot01,type="b",xlab="Event Type",ylab="Total Fatality",main="Total Fatality by Event Type (top 10)")
+plot(sum_by_event ~ EVTYPE, data=my_plot02,type="b",xlab="Event Type",ylab="Total Injuries",main="Total Injury by Event Type (top 10)")
+
+```
+
+
+###
+
+###Conclusion: Tornado is by far the most dangerous natural event causing more fatalities and injuries than any other natural disasters/events.
+
+####
+####
+#### Analyse Property Damage by Event Type
+```{r analyse_propety_damage}
+#read PROPDMG & PROPDMGEXP columns and create new column with #actual damage in $ 
+tempdata1<-myweatherdata
+#insert new column
+tempdata1<-mutate(tempdata1,pdmg=PROPDMG)
+tempdata1$PROPDMGEXP<-as.character(tempdata1$PROPDMGEXP)
+##calculate values in pdmg column
+myrawnumber<-tempdata1$PROPDMG
+myunit<-tempdata1$PROPDMGEXP
+myfinalnumber<-myrawnumber
+
+for (i in 1:nrow(tempdata1)){
+        tempvalue<-myunit[i]
+        if (grepl(pattern = "[kK]", tempvalue)){
+                myfinalnumber[i]<-myrawnumber[i]*1000
+        }
+        else if (grepl(pattern = "[mM]", tempvalue)){
+                myfinalnumber[i]<-myrawnumber[i]*1000000
+        } 
+        else if (grepl(pattern = "[bB]", tempvalue)){
+                myfinalnumber[i]<-myrawnumber[i]*1000000000
+        } 
+        else {
+                next
+        }
+                
+                     
+}
+tempdata1$pdmg<-myfinalnumber
+
+#sum and sort top 10 event types
+pdamage_by_eventtype<-group_by(tempdata1,EVTYPE)
+my_pdmgsum<-summarise(pdamage_by_eventtype,sum_by_event=sum(pdmg))
+my_pdmg02<-arrange(my_pdmgsum,desc(sum_by_event))
+my_plot03<-head(my_pdmg02,10)
+my_plot03<-as.data.frame(my_plot03)
+my_plot03$EVTYPE<-as.character(my_plot03$EVTYPE)
+my_plot03$EVTYPE<-as.factor(my_plot03$EVTYPE)
+my_plot03$EVTYPE<-factor(my_plot03$EVTYPE,levels=as.character(my_plot03$EVTYPE)) 
+
+```
+#### Analyse Crop Damage by Event Type
+```{r analyse_crop_damage}
+#read CROPDMG & CROPDMGEXP columns and create new column with #actual damage in $ 
+tempdata2<-myweatherdata
+#insert new column
+tempdata2<-mutate(tempdata2,cdmg=CROPDMG)
+tempdata2$CROPDMGEXP<-as.character(tempdata2$CROPDMGEXP)
+##calculate values in cdmg column
+myrawnumber<-tempdata2$CROPDMG
+myunit<-tempdata2$CROPDMGEXP
+myfinalnumber<-myrawnumber
+
+for (i in 1:nrow(tempdata2)){
+        tempvalue<-myunit[i]
+        if (grepl(pattern = "[kK]", tempvalue)){
+                myfinalnumber[i]<-myrawnumber[i]*1000
+        }
+        else if (grepl(pattern = "[mM]", tempvalue)){
+                myfinalnumber[i]<-myrawnumber[i]*1000000
+        } 
+        else if (grepl(pattern = "[bB]", tempvalue)){
+                myfinalnumber[i]<-myrawnumber[i]*1000000000
+        } 
+        else {
+                next
+        }
+        
+        
+}
+tempdata2$cdmg<-myfinalnumber
+
+#sum and sort top 10 event types
+cdamage_by_eventtype<-group_by(tempdata2,EVTYPE)
+my_cdmgsum<-summarise(cdamage_by_eventtype,sum_by_event=sum(cdmg))
+my_cdmg02<-arrange(my_cdmgsum,desc(sum_by_event))
+my_plot04<-head(my_cdmg02,10)
+my_plot04<-as.data.frame(my_plot04)
+my_plot04$EVTYPE<-as.character(my_plot04$EVTYPE)
+my_plot04$EVTYPE<-as.factor(my_plot04$EVTYPE)
+my_plot04$EVTYPE<-factor(my_plot04$EVTYPE,
+                         levels=as.character(my_plot04$EVTYPE))
+```
+#### Plot Damage Data
+```{r plot_damage_data}
+par(mfrow=c(2,1),cex.lab=0.8,cex.axis=0.3)
+plot(sum_by_event ~ EVTYPE, data=my_plot03,type="b",xlab="Event Type",ylab="Total Property Damage ($)",
+     main="Total Property by Event Type (top 10)")
+plot(sum_by_event ~ EVTYPE, data=my_plot04,type="b",xlab="Event Type",ylab="Total Crop Damage ($)",
+     main="Total Crop Damage by Event Type (top 10)")
+```
+
+###
+###Conclusion:  Flooding and draught cause most economic damage in terms of property damage and crop damage respectively.
+
+
+
+
