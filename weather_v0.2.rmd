@@ -10,11 +10,12 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-### This report analyses US weather data for the effects of severe weather events on public health and econmic damages.  The weather data is from the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database that tracks characteristics of major storms and weather events in the US.
+### Synopsis
+####This report analyses US weather data for the effects of severe weather events on public health and econmic damages.  The weather data is from the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database that tracks characteristics of major storms and weather events in the US.
 
-###The data is loaded with manipulation.  For public health assessment, both fatalities and injuries are totalled based on weather event types with top 10 most damaging events plotted. For economic damage assessment, both property damage and crop damage are totalled based on weather even types with top 10 most damaging events plotted.
+####The data is loaded with manipulation.  For public health assessment, both fatalities and injuries are totalled based on weather event types with top 10 most damaging events plotted. For economic damage assessment, both property damage and crop damage are totalled based on weather even types with top 10 most damaging events plotted.
 
-###In conclusion, tornados cause the most public health damage by far in terms of both fatality and injuries; while flooding and draught cause most econimic damage to properties and crops respectively.
+####In conclusion, tornados cause the most public health damage by far in terms of both fatality and injuries; while flooding and draught cause most econimic damage to properties and crops respectively.
 
 
 
