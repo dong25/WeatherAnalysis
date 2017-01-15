@@ -17,18 +17,19 @@ knitr::opts_chunk$set(echo = TRUE)
 ###In conclusion, tornados cause the most public health damage by far in terms of both fatality and injuries; while flooding and draught cause most econimic damage to properties and crops respectively.
 
 
--------------------------------------------------------------------------------------------
-###Data Processing Section
+
+### Data Processing Section
 ####
 ####
-####Loading required r packages
+
+#### Loading required r packages
 
 ```{r loadpackeges}
 library(dplyr)
 library(ggplot2)
 ```
 
-####Reading NOAA weather data
+#### Reading NOAA weather data
 ```{r readdata, cache=TRUE}
 #read the raw data file and cache the result as it is time consuming.
 myweatherdata<-read.csv("repdata%2Fdata%2FStormData.csv.bz2")
@@ -151,7 +152,8 @@ my_plot04$EVTYPE<-as.factor(my_plot04$EVTYPE)
 my_plot04$EVTYPE<-factor(my_plot04$EVTYPE,
                          levels=as.character(my_plot04$EVTYPE))
 ```
-------------------------------------------------------------------------------------------
+###
+###
 ### Result Plotting and Presentation Section
 ####Plotting Fatality and Injury Data
 ```{r plot_fatality_injury}
@@ -164,8 +166,6 @@ plot(sum_by_event ~ EVTYPE, data=my_plot02,type="b",xlab="Event Type",ylab="Tota
 
 ###
 
-###Conclusion: Tornado is by far the most dangerous natural event causing more fatalities and injuries than any other natural disasters/events.
-
 #### Plot Damage Data
 ```{r plot_damage_data}
 par(mfrow=c(2,1),cex.lab=0.8,cex.axis=0.3)
@@ -176,7 +176,9 @@ plot(sum_by_event ~ EVTYPE, data=my_plot04,type="b",xlab="Event Type",ylab="Tota
 ```
 
 ###
-###Conclusion:  Flooding and draught cause most economic damage in terms of property damage and crop damage respectively.
+###Conclusion:  
+###Tornado is by far the most dangerous natural event causing more fatalities and injuries than any other natural disasters/events.
+###Flooding and draught cause most economic damage in terms of property damage and crop damage respectively.
 
 
 
